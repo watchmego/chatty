@@ -10,7 +10,6 @@
   border: none;
   border-radius: 0;
   padding: 2%;
-  height: 15vh;
   width: 100%;
   font-size: 1.2em;
 }
@@ -19,22 +18,17 @@ input:focus, textarea:focus, select:focus{
   outline: none;
 }
 
-.textInput{
+.text{
   width: 100%;
   resize: none;
   font-size: 16px;
 }
 
 .sendButton {
-  width: 150px;
-  background-color: green;
-  padding: 10px;
-  border: none;
-  outline: none;
-  color: #eae3d2;
-  cursor: pointer;
-}
-
-.sendButton:hover {
-  background-color: rgb(129, 201, 129);
+  color: #fff;
+  text-decoration: none;
+  background: #2979FF;
+  padding: 20px;
+  display: inline-block;
+  width: 20%;
 }

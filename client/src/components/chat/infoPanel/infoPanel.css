@@ -1,10 +1,19 @@
 .infoPanelBox {
-    margin-left: auto;
-    margin-right: 0px;
-    background: #F3F3F3;
-    border-left-style: 2px solid #D3D3D3;
-    padding: 5px 20px;
-    display: inline-block;
-    width: 30%;
-    height: 100%;
-  }
+  height: 100%;
+  background-color: #f9f5eb;
+  flex: 0.2;
+  padding: 20px;
+  border-right: 1px solid #fdfdfd;
+}
+
+.userList > * {
+  margin-bottom: 10px;
+  color: #607eaa;
+  font-size: 14px;
+}
+
+.onlineUsers > * {
+  margin-bottom: 10px;
+  color: rgb(238, 102, 102);
+  font-style: italic;
+}
