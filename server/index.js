@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
     io.emit("userList", users);
   })
 
-  socket.on('typing', (data) => {
+  socket.on('typing', (data, remove) => {
     let message;
     console.log('typers pre:',typers[0]?.message, typers[1]?.message)
     let idx = typers.findIndex(e => e.message.includes(data));
@@ -59,13 +59,16 @@ io.on('connection', (socket) => {
       typers.splice(idx, 1);
       
     }
-    let id = setTimeout(()=> typers.pop(), 3000);
-    typers.push({message: `${data} is typing`, timeoutId: id})
-    console.log(typers.length);
-    if(typers.length > 1) {
-      message = "multiple people are typing"
-    } else {
-      message = typers[0].message;
+    console.log("typing");
+    if(!remove) {
+      let id = setTimeout(()=> typers.pop(), 3000);
+      typers.push({message: `${data} is typing`, timeoutId: id})
+      console.log(typers.length);
+      if(typers.length > 1) {
+        message = "multiple people are typing"
+      } else {
+        message = typers[0].message;
+      }
     }
     io.emit('typing', message);
     console.log('typers post:',typers[0]?.message, typers[1]?.message)

@@ -13,15 +13,18 @@ export const TextInput = ({ socket }) => {
         socket.emit("message",{
             text: message, 
             id: `${socket.id}${Math.random()}`,
-            name: localStorage.getItem('name')
+            name: localStorage.getItem('name'),
+            key: Math.random()
         });
         }
+        handleTyping(true);
         setMessage("");
     }
 
-    const handleTyping = () => {
+    const handleTyping = (remove = false) => { 
+        console.log('handletyping called with remove', remove);
         if(!typing) {
-            socket.emit('typing', localStorage.getItem('name'));
+            socket.emit('typing', localStorage.getItem('name'), remove);
             setTyping(true);
             setTimeout(() => setTyping(false), 500);
         }
@@ -37,7 +40,7 @@ export const TextInput = ({ socket }) => {
                     rows="3" 
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    onKeyDown={handleTyping}
+                    onKeyDown={() => handleTyping()}
                     />
                 <button type="submit" className="sendButton">Send</button>
             </form>
