@@ -1,20 +1,25 @@
 import { useState } from "react";
 
 import './textInput.css'
+import { useParams } from "react-router-dom";
 
 export const TextInput = ({ socket }) => {
 
     const [ message, setMessage ] = useState("");
     const [ typing, setTyping ] = useState(false);
+    const {room} = useParams();
 
     const handleSend = (e) => {
         e.preventDefault();
-        if (message.trim() && localStorage.getItem('name')) {
-        socket.emit("message",{
+        console.log(sessionStorage.getItem("name"))
+        if (message.trim() && sessionStorage.getItem('name')) {
+            console.log('sending message');
+            socket.emit("message",{
             text: message, 
             id: `${socket.id}${Math.random()}`,
-            name: localStorage.getItem('name'),
-            key: Math.random()
+            name: sessionStorage.getItem('name'),
+            key: Math.random(),
+            roomName: room
         });
         }
         handleTyping(true);
@@ -24,7 +29,7 @@ export const TextInput = ({ socket }) => {
     const handleTyping = (remove = false) => { 
         console.log('handletyping called with remove', remove);
         if(!typing) {
-            socket.emit('typing', localStorage.getItem('name'), remove);
+            //socket.emit('typing', sessionStorage.getItem('name'), remove, room);
             setTyping(true);
             setTimeout(() => setTyping(false), 500);
         }

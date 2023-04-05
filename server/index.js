@@ -3,6 +3,8 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import dotenv from 'dotenv'
 import { initialiseAI, chatAddAI, sendAIMessage } from "./openAI/AI.js";
+import { v4 as uuidv4 } from 'uuid';
+import { SessionStore } from './SessionStore.js'
 dotenv.config()
 
 
@@ -14,19 +16,84 @@ const io = new Server(httpServer, {
   },
  });
 
-let users = [];
 let typers = [];
-let timeout = 0;
-let message = ""
-let AISocket;
+
+const sessionStore = new SessionStore();
+
+
 
 io.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
+  socket.on('join', (data) => {
+
+    //create persistent session
+    let sessionExists = false;
+    const sessionID = socket.handshake.auth?.sessionID;
+    console.log("sessionID", socket.handshake.auth, sessionID, sessionStore.findAllSessions());
+    if(sessionID) {
+         // find existing session
+        const session = sessionStore.findSession(sessionID);
+        console.log('sessionStore',sessionStore.findSession(sessionID));
+        if (session) {
+          socket.sessionID = sessionID;
+          socket.userId = session.userId;
+          socket.username = session.username;
+          sessionExists = true;
+          }
+        }
+    
+    if (!sessionExists) {
+      console.log('creating new sessionStore');
+      socket.sessionID = uuidv4();
+      socket.userId = uuidv4();
+      socket.username = data.name;
+      sessionStore.saveSession(socket.sessionID, {
+        socketId: socket.id,
+        userId: socket.userId,
+        username: socket.username,
+        connected: true,
+      });
+    
+      socket.emit("session", {
+        sessionID: socket.sessionID,
+        userId: socket.userId,
+      });
+    }
+
+
+
+
+    console.log('join data', data);
+
+    const { name, roomName } = data;
+
+    if (!name) {
+      socket.emit('error', 'Name is required to join the chat');
+      return;
+    }
+    const { rooms } = io.sockets.adapter;
+    const room = rooms.get(roomName);
+    console.log("room name is", rooms, room);
+
+    socket.join(roomName);
+    sessionStore.saveRoom(roomName);
+    sessionStore.saveUserInRoom(roomName, {sessionId: socket.sessionID, name: name, socketId: socket.userId});
+    socket.emit("created");
+    console.log("joined room")
+    console.log(room);
+
+    
+    const users = sessionStore.findUsersInRoom(roomName);
+    console.log('userlist',users.length);
+    io.to(roomName).timeout(2000).emit("userList", users);
+  });
   //Listens and logs the message to the console
   socket.on('message', (data) => {
     console.log('message received', data);
-    io.emit('messageResponse', data);
+    const {roomName} = data;
+    io.in(roomName).fetchSockets().then((sockets) => {'users in room',console.log(sockets)});
+    io.to(roomName).timeout(5000).emit('messageResponse', data);
     if(data.text.slice(0,10).toLowerCase().includes("assistant")) {
       sendAIMessage(data);
     }
@@ -37,19 +104,20 @@ io.on('connection', (socket) => {
   })
   socket.onAny((event, data) => console.log('catchall',event, data));
 
-  socket.on('disconnect', () => {
+  socket.on('leave', (roomName) => {
     console.log('🔥: A user disconnected');
-    users = users.filter((user) => user.socketID !== socket.id);
-    io.emit("userList", users);
+    console.log(socket.id);
+    const users = sessionStore.deleteUserFromRoom(roomName, socket.sessionID)
+    sessionStore.deleteSession(socket.sessionID);
+    console.log("users post", users);
+    io.to(roomName).timeout(2000).emit("userList", users);
     socket.disconnect();
   });
 
-  socket.on('addUser', (data) => { 
-    users.push(data);
-    io.emit("userList", users);
-  })
 
-  socket.on('typing', (data, remove) => {
+  
+
+  socket.on('typing', (data, remove, roomName) => {
     let message;
     console.log('typers pre:',typers[0]?.message, typers[1]?.message)
     let idx = typers.findIndex(e => e.message.includes(data));
@@ -70,7 +138,8 @@ io.on('connection', (socket) => {
         message = typers[0].message;
       }
     }
-    io.emit('typing', message);
+
+    io.to(roomName).timeout(2000).emit('typing', message);
     console.log('typers post:',typers[0]?.message, typers[1]?.message)
 
   }) 

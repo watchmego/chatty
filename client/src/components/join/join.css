@@ -12,6 +12,9 @@ html, body {
     box-sizing: border-box;
   }
   
+  .joinInnerContainer {
+    margin: auto;
+  }
   .importMain {
     display: flex;
     justify-content: center;
@@ -61,6 +64,30 @@ html, body {
   
     .joinInnerContainer {
       width: 90%;
+    }
+  
+  
+  }
+
+  @media (min-width: 480px) and (max-width: 720px) {
+    .joinOuterContainer {
+      height: 100%;
+    }
+  
+    .joinInnerContainer {
+      width: 50%;
+    }
+  
+  
+  }
+
+  @media (min-width: 720px)  {
+    .joinOuterContainer {
+      height: 100%;
+    }
+  
+    .joinInnerContainer {
+      width: 30%;
     }
   
   

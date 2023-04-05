@@ -12,7 +12,7 @@ function App() {
       <Router>
         <Routes>
             <Route path='/' exact element={<Join />} />
-            <Route path='/chat' element={<Chat />} />
+            <Route path='/chat/:room' element={<Chat />} />
         </Routes>
       </Router>
     

@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import './messageBox.css'
 
@@ -7,9 +7,12 @@ export const MessageBox = ({ messages, lastMessageRef, socket }) => {
     const navigate = useNavigate();
     const [ typingStatus, setTypingStatus ] = useState("");
     const timeoutId = useRef(0);
+    const {room} = useParams()
 
     const handleLeave = () => {
-        localStorage.removeItem('name');
+        sessionStorage.removeItem('name');
+        sessionStorage.removeItem('sessionID');
+        socket.emit('leave', room)
         navigate('/');
     }
 
@@ -33,7 +36,7 @@ export const MessageBox = ({ messages, lastMessageRef, socket }) => {
             </header>
             <div className="messageContainer">
                 {messages.map(message => 
-                    message.name === localStorage.getItem('name') ? (
+                    message.name === sessionStorage.getItem('name') ? (
                     <div className="messageBox" key={message.key}>
                         <p className="senderName">ME</p>
                         <div className="messageSender"> 

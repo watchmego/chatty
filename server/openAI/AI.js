@@ -29,16 +29,16 @@ export const initialiseAI = () => {
 //     messages: [{role: "user", content: "Hello world"}],
 // })
 
-export const chatAddAI = () => {
+export const chatAddAI = (room) => {
     conversation = [];
     socket = io("http://localhost:8000");
     socket.on("connect_error", (err) => {
         console.log(`connect_error due to ${err.message}`);
       });
     socket.on("connect", () => {
-          socket.emit("addUser", {name: 'AI Assistant', socketID: socket.id})
+          socket.emit("join", {name: 'AI Assistant', socketID: socket.id})
       });
-    socket.connect();
+    //socket.connect();
 } 
 
 export const sendAIMessage = async (data) => { 
@@ -48,7 +48,7 @@ export const sendAIMessage = async (data) => {
         model: "gpt-3.5-turbo",
         messages: [
             {"role": "system", "content": "You are a helpful assistant"},
-            ...conversation,
+            ...conversation, 
             {"role": "user", "content": data.text}
         ], 
         temperature: 0.9,
