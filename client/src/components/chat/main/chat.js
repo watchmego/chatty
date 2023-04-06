@@ -3,7 +3,6 @@ import { InfoPanel } from '../infoPanel/infoPanel';
 import { MessageBox } from '../messageBox/messageBox';
 import { TextInput } from '../textBox/textInput';
 import { Navigate, useParams } from 'react-router-dom';
-import { ChatContext } from '../../../App';
 
 import './chat.css';
 
