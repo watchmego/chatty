@@ -74,14 +74,13 @@ io.on('connection', (socket) => {
     }
     const { rooms } = io.sockets.adapter;
     const room = rooms.get(roomName);
-    console.log("room name is", rooms, room);
 
     socket.join(roomName);
     sessionStore.saveRoom(roomName);
     sessionStore.saveUserInRoom(roomName, {sessionId: socket.sessionID, name: name, socketId: socket.userId});
     socket.emit("created");
     console.log("joined room")
-    console.log(room);
+    console.log(socket.sessionID, room);
 
     
     const users = sessionStore.findUsersInRoom(roomName);

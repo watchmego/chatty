@@ -36,9 +36,7 @@ export class SessionStore {
     }
 
     deleteUserFromRoom(roomName, sessionId) {
-      console.log('pre del',this.rooms[roomName])
       delete this.rooms[roomName][sessionId];
-      console.log('post del',this.rooms[roomName])
       return this.findUsersInRoom(roomName);
     }
 
@@ -50,12 +48,9 @@ export class SessionStore {
       if(!this.rooms[roomName]) {
         this.rooms[roomName] = {};
       }
-      console.log('rooms',this.rooms);
     }
 
-    saveUserInRoom(roomName, user) {
-      
+    saveUserInRoom(roomName, user) {   
         this.rooms[roomName][user.sessionId] = user;
-        console.log('room users',this.rooms[roomName][user.sessionId])
     }
 }

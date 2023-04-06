@@ -73,10 +73,9 @@ useEffect(() => {
         console.log(users);
         }
 
-    const onTyping = (user) => {
-        if(!user.startsWith(sessionStorage.getItem("name")) ) {
-            console.log(user.startsWith(sessionStorage.getItem("name")));
-            setTypingStatus(user); 
+    const onTyping = (message) => {
+        if(message !== `${sessionStorage.getItem("name")} is typing`) {
+            setTypingStatus(message); 
             clearTimeout(timeoutId.current);
             timeoutId.current = (setTimeout(()=>
             setTypingStatus(""), 5000));
