@@ -29,7 +29,7 @@ export const TextInput = ({ socket }) => {
     const handleTyping = (remove = false) => { 
         console.log('handletyping called with remove', remove);
         if(!typing) {
-            //socket.emit('typing', sessionStorage.getItem('name'), remove, room);
+            socket.emit('typing', sessionStorage.getItem('name'), remove, room);
             setTyping(true);
             setTimeout(() => setTyping(false), 500);
         }

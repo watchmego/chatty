@@ -29,26 +29,17 @@ export class SessionStore {
 
     findUsersInRoom(roomName) {
       const room = this.rooms[roomName];
-      console.log('room list', roomName, room);
       if (room) {
-        console.log('is there just one room?', room)
         return Object.values(room);
       }
       return [];
     }
 
     deleteUserFromRoom(roomName, sessionId) {
-      const room = this.rooms[roomName];
-      console.log('deleing user',room);
-      if (room) {
-        for (const user in room) {
-          if (user.sessionId === sessionId) {
-            delete room[sessionId];
-            break;
-          }
-        }
-      }
-      return this.findUsersInRoom(room);
+      console.log('pre del',this.rooms[roomName])
+      delete this.rooms[roomName][sessionId];
+      console.log('post del',this.rooms[roomName])
+      return this.findUsersInRoom(roomName);
     }
 
     deleteRoom(roomName) {

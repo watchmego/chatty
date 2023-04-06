@@ -2,25 +2,27 @@ import { useState, useEffect, useRef } from 'react';
 import { InfoPanel } from '../infoPanel/infoPanel';
 import { MessageBox } from '../messageBox/messageBox';
 import { TextInput } from '../textBox/textInput';
-import { io } from "socket.io-client";
 import { Navigate, useParams } from 'react-router-dom';
 import { ChatContext } from '../../../App';
 
 import './chat.css';
 
-    //initialise socket
-let socket = io("http://192.168.178.33:8000");
+    
 
 
 
-export const Chat = () => {
+
+export const Chat = ({socket}) => {
 
     const { room } = useParams();
     //chat message list
     const [messages, setMessages] = useState([]);
+    const [ typingStatus, setTypingStatus ] = useState("");
+    const [users, setUsers] = useState([]);
     
     //ref to keep last message in view
     const lastMessageRef = useRef(null);
+    const timeoutId = useRef(0);
     
 
     
@@ -66,7 +68,23 @@ useEffect(() => {
         socket.userID = userID;
     }
 
-    
+    const onUserUpdate = (data) => {
+        setUsers(data);
+        console.log(users);
+        }
+
+    const onTyping = (user) => {
+        if(!user.startsWith(sessionStorage.getItem("name")) ) {
+            console.log(user.startsWith(sessionStorage.getItem("name")));
+            setTypingStatus(user); 
+            clearTimeout(timeoutId.current);
+            timeoutId.current = (setTimeout(()=>
+            setTypingStatus(""), 5000));
+        }
+    };
+
+    socket.on('typing', onTyping);
+    socket.on("userList", onUserUpdate);
     socket.on("session", onSession);
     socket.on("connect_error", onConnectError);
     socket.on('messageResponse', onMessage);
@@ -76,6 +94,7 @@ useEffect(() => {
     
     //socket cleanup, remove listeners and null socket
     return () => {
+        socket.off('typing');
         socket.off('connect_error');
         socket.off('messageResponse');
         socket.off('connect');
@@ -100,14 +119,15 @@ useEffect(() => {
                     <Navigate to='/' />
                     ) : (
                         <div className="main">
-                            <InfoPanel socket={socket} />
+                            <InfoPanel socket={socket} users={users}/>
                             <div className="chatContainer">
                                 <MessageBox 
                                     messages={messages} 
-                                    // lastMessageRef={lastMessageRef}
+                                    lastMessageRef={lastMessageRef}
+                                    typingStatus={typingStatus}
                                     socket={socket}
                                     />
-                                <TextInput socket={socket} />
+                                <TextInput socket={socket}/>
                             </div>
                         </div>
 
@@ -115,17 +135,3 @@ useEffect(() => {
            </>
     )
 } 
-
-                    // <div className="chatContainer">
-                    //     <div className='title'>
-                    //         <ChatHeader/>
-                    //     </div>
-                    //     <div className="middleRow">
-                    //         <MessageBox messages={messages} />
-                    //         <InfoPanel />
-                    //     </div>
-                    //     <div className="bottomRow">
-                    //         <TextInput socket={socket}/>
-                    //     </div>
-                    // </div> */
-                    // </div> */

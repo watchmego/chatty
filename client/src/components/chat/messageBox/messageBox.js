@@ -3,10 +3,8 @@ import { useEffect, useState, useRef } from 'react';
 import './messageBox.css'
 
 
-export const MessageBox = ({ messages, lastMessageRef, socket }) => {
+export const MessageBox = ({ messages, lastMessageRef, socket, typingStatus }) => {
     const navigate = useNavigate();
-    const [ typingStatus, setTypingStatus ] = useState("");
-    const timeoutId = useRef(0);
     const {room} = useParams()
 
     const handleLeave = () => {
@@ -15,15 +13,6 @@ export const MessageBox = ({ messages, lastMessageRef, socket }) => {
         socket.emit('leave', room)
         navigate('/');
     }
-
-    useEffect(() => {
-        socket.on('typing', (message) => {       
-        setTypingStatus(message); 
-        clearTimeout(timeoutId.current);
-        timeoutId.current = (setTimeout(()=>
-            setTypingStatus(""), 5000));
-        });
-    }, [socket, typingStatus]);
 
 
     return(

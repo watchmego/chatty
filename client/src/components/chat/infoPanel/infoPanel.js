@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 
 import './infoPanel.css'
 
-export const InfoPanel = ({socket}) => {
-
-    //user list
-    const [ users, setUsers ] = useState([])
+export const InfoPanel = ({socket, users}) => {
+    console.log(users);
     //AI 'user' invite status
     const [ aiInvited, setAIInvited] = useState(false);
     const handleAIInvite = () => {
@@ -13,15 +11,7 @@ export const InfoPanel = ({socket}) => {
         socket.emit("addAI")
     }
 
-    //update user list when somebody joins/leaves
-    //need to move this into the chat component, and eventually a separate component
-    useEffect(() => {
-        socket.on("userList", (data =>  
-            {
-                console.log('userlist received', data)
-                setUsers(data);
-            }))
-    },[]);
+
 
 
 
