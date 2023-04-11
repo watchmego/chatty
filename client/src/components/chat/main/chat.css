@@ -1,23 +1,19 @@
-
-.main{
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
+.main {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
-
-.chatContainer{
-    height: 100%;
-    flex: 0.8;
+.chatContainer {
+  height: 100%;
+  flex: 0.8;
 }
 
-.middleRow{
-    display: flex;
-    height: 100%;
+.middleRow {
+  display: flex;
+  height: 100%;
 }
-
-
 
 /* @media (min-width: 320px) and (max-width: 480px) {
     .outerContainer {
