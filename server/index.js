@@ -25,7 +25,7 @@ const sessionStore = new SessionStore();
 io.on('connection', (socket) => {
   console.log(`⚡: ${socket.id} user just connected!`);
 
-  socket.on('join', (data) => {
+  
 
     //create persistent session
     let sessionExists = false;
@@ -44,26 +44,27 @@ io.on('connection', (socket) => {
         }
     
     if (!sessionExists) {
-      console.log('creating new sessionStore');
+      console.log('creating new sessionStore', socket);
       socket.sessionID = uuidv4();
       socket.userId = uuidv4();
-      socket.username = data.name;
       sessionStore.saveSession(socket.sessionID, {
         socketId: socket.id,
         userId: socket.userId,
-        username: socket.username,
+        username: socket.handshake.auth.name,
         connected: true,
       });
     
-      socket.emit("session", {
-        sessionID: socket.sessionID,
-        userId: socket.userId,
-      });
-    }
+
+    } 
+    console.log("emitting session data");
+    socket.emit("session", {
+      
+      sessionID: socket.sessionID,
+      userID: socket.userId,
+    });
 
 
-
-
+  socket.on('join', (data) => {
     console.log('join data', data);
 
     const { name, roomName } = data;
@@ -105,17 +106,17 @@ io.on('connection', (socket) => {
 
   socket.on('leave', (roomName) => {
     console.log('🔥: A user disconnected');
-    console.log(socket.id);
+    console.log(socket);
     const users = sessionStore.deleteUserFromRoom(roomName, socket.sessionID)
     sessionStore.deleteSession(socket.sessionID);
-    console.log("users post", users);
+    console.log("users post", users); 
     io.to(roomName).timeout(2000).emit("userList", users);
     socket.disconnect();
   });
-
-
   
-
+ 
+  
+ 
   socket.on('typing', (data, remove, roomName) => {
     let message;
     console.log('typers pre:',typers[0]?.message, typers[1]?.message)

@@ -10,6 +10,7 @@ export const MessageBox = ({ messages, lastMessageRef, socket, typingStatus }) =
     const handleLeave = () => {
         sessionStorage.removeItem('name');
         sessionStorage.removeItem('sessionID');
+        sessionStorage.removeItem('userID');
         socket.emit('leave', room)
         navigate('/');
     }
