@@ -3,12 +3,16 @@ import { useEffect, useState, useParams, useRef } from "react";
 import { Provider, useDispatch } from "react-redux";
 import { io } from "socket.io-client";
 
+
 import { store } from "./app/store";
 import { Join } from "./components/join/join";
 import { Chat } from "./components/chat/main/chat";
 
+
 function App() {
-  const socket = io("https://192.168.178.33:8000");
+  
+  const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
+  
 
   return (
     <Provider store={store}>
