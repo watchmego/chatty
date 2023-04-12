@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
         }
     
     if (!sessionExists) {
-      console.log('creating new sessionStore', socket);
+      console.log('creating new sessionStore');
       socket.sessionID = uuidv4();
       socket.userId = uuidv4();
       sessionStore.saveSession(socket.sessionID, {
@@ -56,8 +56,8 @@ io.on('connection', (socket) => {
     
 
     } 
+    console.log('about to emit session');
     socket.emit("session", {
-      
       sessionID: socket.sessionID,
       userID: socket.userId,
     });
@@ -89,9 +89,9 @@ io.on('connection', (socket) => {
   });
   //Listens and logs the message to the console
   socket.on('message', (data) => {
-    console.log('message received', data);
+    //console.log('message received', data);
     const {roomName} = data;
-    io.in(roomName).fetchSockets().then((sockets) => {'users in room',console.log(sockets)});
+    io.in(roomName).fetchSockets().then((sockets) => {console.log('users in room', sockets[0])});
     io.to(roomName).timeout(5000).emit('messageResponse', data);
     if(data.text.slice(0,10).toLowerCase().includes("assistant")) {
       sendAIMessage(data);
