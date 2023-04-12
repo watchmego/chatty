@@ -33,7 +33,7 @@ export const chatAddAI = (room) => {
     conversation = [];
     socket = io("http://localhost:8000");
     socket.on("connect_error", (err) => {
-        
+        console.log(`connect_error due to ${err.message}`);
       });
     socket.on("connect", () => {
           socket.emit("join", {name: 'AI Assistant', socketID: socket.id})
