@@ -10,9 +10,9 @@ export const TextInput = ({ socket }) => {
 
   const handleSend = (e) => {
     e.preventDefault();
-    
+    console.log(sessionStorage.getItem("name"));
     if (message.trim() && sessionStorage.getItem("name")) {
-      
+      console.log("sending message");
       socket.emit("message", {
         text: message,
         id: `${socket.id}${Math.random()}`,
@@ -26,7 +26,7 @@ export const TextInput = ({ socket }) => {
   };
 
   const handleTyping = (remove = false) => {
-    
+    console.log("handletyping called with remove", remove);
     if (!typing) {
       socket.emit("typing", sessionStorage.getItem("name"), remove, room);
       setTyping(true);

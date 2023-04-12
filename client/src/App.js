@@ -8,7 +8,7 @@ import { Join } from "./components/join/join";
 import { Chat } from "./components/chat/main/chat";
 
 function App() {
-  const socket = io("http://192.168.178.33:8000");
+  const socket = io("https://192.168.178.33:8000");
 
   return (
     <Provider store={store}>

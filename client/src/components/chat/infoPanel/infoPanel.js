@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import "./infoPanel.css";
 
 export const InfoPanel = ({ socket, users }) => {
-  
+  console.log(users);
   //AI 'user' invite status
   const [aiInvited, setAIInvited] = useState(false);
   const handleAIInvite = () => {

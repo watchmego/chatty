@@ -26,7 +26,7 @@ export const Chat = ({ socket }) => {
   //chat message list
   const messages = useSelector((state) => state.messages.messageList);
   const users = useSelector((state) => state.users.userList);
-  
+  console.log(messages);
 
   //ref to keep last message in view
   const lastMessageRef = useRef(null);
@@ -39,7 +39,7 @@ export const Chat = ({ socket }) => {
 
   const sessionID = sessionStorage.getItem("sessionID");
   const userID = sessionStorage.getItem("userID");
-  
+  console.log(sessionStorage.getItem("name"));
   const name = sessionStorage.getItem("name");
   if (typeof socket.auth === "undefined") {
     socket.auth = {};
@@ -52,7 +52,7 @@ export const Chat = ({ socket }) => {
     //     const e = event || window.event;
     //     e.preventDefault();
 
-    //     
+    //     console.log('beforeunload event triggered', socket);
 
     //             socket.emit('leave', room)
     //         socket.disconnect();
@@ -61,18 +61,18 @@ export const Chat = ({ socket }) => {
     //   };
 
     const onConnectError = (err) => {
-      
+      console.log(`connect_error due to ${err.message}`);
     };
     const onMessage = (data) => {
       dispatch(addMessage(data));
     };
 
     const onConnect = () => {
-      
+      console.log("connecting socket", socket.auth);
     };
 
     const onSession = ({ sessionID, userID }) => {
-      
+      console.log("session data received");
       socket.auth.sessionID = sessionID;
       socket.auth.userID = userID;
       sessionStorage.setItem("sessionID", sessionID);
@@ -82,12 +82,12 @@ export const Chat = ({ socket }) => {
     };
 
     const onUserUpdate = (data) => {
-      
+      console.log("userdata", data);
       dispatch(addUser(data));
     };
 
     const onTyping = (message) => {
-      
+      console.log("typgin");
       if (message !== `${sessionStorage.getItem("name")} is typing`) {
         setTypingStatus(message);
         clearTimeout(timeoutId.current);
@@ -103,7 +103,7 @@ export const Chat = ({ socket }) => {
     socket.on("connect", onConnect);
     //timeout to ensure listeners are all active before connecting
     setTimeout(() => {
-      
+      console.log("connecting socket", socket);
       socket.connect({ auth: { name: name } });
     }, 500);
 
