@@ -12,6 +12,7 @@ import { Chat } from "./components/chat/main/chat";
 function App() {
   
   const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
+  console.log(`process.env...${process.env.REACT_APP_SERVER}, just react_app_server...${REACT_APP_SERVER}`);
   
 
   return (

@@ -1,18 +1,16 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import dotenv from 'dotenv'
 import { initialiseAI, chatAddAI, sendAIMessage } from "./openAI/AI.js";
 import { v4 as uuidv4 } from 'uuid';
 import { SessionStore } from './SessionStore.js'
-dotenv.config()
 
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { 
   cors: {
-    origin: [process.env.CLIENT,"http://localhost:3000"]
+    origin: [process.env.CLIENT]
   },
  });
 
@@ -146,10 +144,14 @@ io.on('connection', (socket) => {
 
 
 
+module.exports.handler = (event, context) => {
+    const server = httpServer.listen((8000), () => {
+        initialiseAI();
+        console.log('listening on port 8000');
+    });
+    const handler = server._events.request.handler;
+    return handler(event, context, () => {
+      server.close();
+    });
+}
 
-httpServer.listen((8000), () => {
-  initialiseAI();
-  console.log('listening on port 8000');
-});
-
-console.log(io.eventNames());
