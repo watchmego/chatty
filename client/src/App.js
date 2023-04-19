@@ -11,6 +11,12 @@ import { Chat } from "./components/chat/main/chat";
 
 function App() {
   
+  const router = useRouter();
+  const path = (/#!(\/.*)$/.exec(router.asPath) || [])[1];
+  if (path) {
+    router.replace(path);
+  }
+  
   const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
   console.log(`process.env...${process.env.REACT_APP_SERVER}`);
   
