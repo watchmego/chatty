@@ -24,12 +24,10 @@ function App() {
 
   return (
     <Provider store={store}>
-      <Router>
         <Routes>
           <Route path="/" element={<Join />} />
           <Route path="/chat/:room" element={<Chat socket={socket} />} />
         </Routes>
-      </Router>
     </Provider>
   );
 }
