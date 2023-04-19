@@ -1,7 +1,6 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect, useState, useParams, useRef } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect, useState, useParams, useRef, useLayoutEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom'
 import { io } from "socket.io-client";
 
 
@@ -12,23 +11,15 @@ import { Chat } from "./components/chat/main/chat";
 
 function App() {
   
-  const [socket, setSocket] = useState(null);
+  const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false})
 
-  let navigate = useNavigate()
   useEffect(() => {
     if (window.location.hash) {
       const path = window.location.hash.replace("#!", "");
-      navigate(path, { replace: true });
+      window.history.replaceState(null, null, path);
     }
-  },[navigate])
+  }, []);
 
-  useEffect(() => {
-    setSocket(io(process.env.REACT_APP_SERVER, {autoConnect: false}));
-    console.log(`process.env...${process.env.REACT_APP_SERVER}`);
-    return () => {
-      socket.disconnect();
-    };
-  })
 
   return (
     <Provider store={store}>
