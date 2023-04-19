@@ -13,6 +13,14 @@ function App() {
   
   const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false})
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path !== '/') {
+      navigate(path);
+    }
+  }, []);
 
   return (
     <Provider store={store}>
