@@ -16,11 +16,11 @@ function App() {
 
   let navigate = useNavigate()
   useEffect(() => {
-    const path  = (/#!(\/.*)$/.exec(window.location.hash) || [])[1];
-    if (path) {
-      navigate(path, { replace: true});
+    if (window.location.hash) {
+      const path = window.location.hash.replace("#!", "");
+      navigate(path, { replace: true });
     }
-  },[])
+  },[navigate])
 
   useEffect(() => {
     setSocket(io(process.env.REACT_APP_SERVER, {autoConnect: false}));
