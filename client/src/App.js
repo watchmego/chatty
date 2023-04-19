@@ -13,13 +13,6 @@ function App() {
   
   const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false})
 
-  useEffect(() => {
-    if (window.location.hash) {
-      const path = window.location.hash.replace("#!", "");
-      window.history.replaceState(null, null, path);
-    }
-  }, []);
-
 
   return (
     <Provider store={store}>
