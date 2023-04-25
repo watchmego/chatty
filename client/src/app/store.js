@@ -3,12 +3,19 @@ import {
   messageReducer,
   userReducer,
   typingReducer,
+  aiReducer,
 } from "../features/chat/chatSlice";
+import { socketMiddleware } from "../features/middleware/socket";
+import { io } from "socket.io-client";
+
+const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
 
 export const store = configureStore({
   reducer: {
     messages: messageReducer,
     typing: typingReducer,
     users: userReducer,
+    ai: aiReducer,
   },
+  middleware: (getDefaultMiddleware =>  [...getDefaultMiddleware(), socketMiddleware(socket)])
 });

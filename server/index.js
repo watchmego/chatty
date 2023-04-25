@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
     //create persistent session
     let sessionExists = false;
     const sessionID = socket.handshake.auth?.sessionID;
-    console.log("sessionID", socket.handshake.auth, sessionID, sessionStore.findAllSessions());
+    console.log("sessionID", socket, sessionID, sessionStore.findAllSessions());
     if(sessionID) {
          // find existing session
         const session = sessionStore.findSession(sessionID);

@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
 
 const initialState = {
   messageList: [],
@@ -45,9 +46,21 @@ const userSlice = createSlice({
   },
 });
 
+const aiSlice = createSlice({
+  name: "ai",
+  initialState,
+  reducers: {
+    aiActive: (state, action) => {
+      state.ai.active = action.payload;
+    }
+  }
+})
+
 export const { addMessage, deleteMessage } = messagesSlice.actions;
 export const { isTyping } = typingSlice.actions;
 export const { addUser, removeUser } = userSlice.actions;
+export const { aiActive } = aiSlice.actions;
 export const messageReducer = messagesSlice.reducer;
 export const typingReducer = typingSlice.reducer;
 export const userReducer = userSlice.reducer;
+export const aiReducer = aiSlice.reducer;

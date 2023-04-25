@@ -19,12 +19,13 @@ export const MessageBox = ({
     navigate("/");
   };
 
+  console.log(messages);
   return (
     <>
       <header className="chatHeader">
         <p>Hangout with Colleagues</p>
         <button className="leaveButton" onClick={handleLeave}>
-          LEAVE CHAT
+          Leave Chat
         </button>
       </header>
       <div className="messageContainer">

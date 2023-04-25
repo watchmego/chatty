@@ -2,25 +2,38 @@ import { useState } from "react";
 
 import "./textInput.css";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 export const TextInput = ({ socket }) => {
+
   const [message, setMessage] = useState("");
   const [typing, setTyping] = useState(false);
   const { room } = useParams();
-
+  const dispatch = useDispatch();
+  
   const handleSend = (e) => {
+    
     e.preventDefault();
     console.log(sessionStorage.getItem("name"));
     if (message.trim() && sessionStorage.getItem("name")) {
-      console.log("sending message");
-      socket.emit("message", {
+      dispatch({ type: 'socket/sendMessage', payload: {
         text: message,
         id: `${socket.id}${Math.random()}`,
         name: sessionStorage.getItem("name"),
         key: Math.random(),
         roomName: room,
-      });
+      }});
     }
+    // if (message.trim() && sessionStorage.getItem("name")) {
+    //   console.log("sending message");
+    //   socket.emit("message", {
+    //     text: message,
+    //     id: `${socket.id}${Math.random()}`,
+    //     name: sessionStorage.getItem("name"),
+    //     key: Math.random(),
+    //     roomName: room,
+    //   });
+    // }
     handleTyping(true);
     setMessage("");
   };

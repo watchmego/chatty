@@ -11,6 +11,7 @@ export const Join = () => {
     //add authentication middleware here
     e.preventDefault();
     sessionStorage.setItem("name", name);
+    sessionStorage.setItem("room", room);
 
     navigate(`/chat/${room}`);
   };
