@@ -10,12 +10,12 @@ export const TextInput = ({ socket }) => {
   const [typing, setTyping] = useState(false);
   const { room } = useParams();
   const dispatch = useDispatch();
-  
+
   const handleSend = (e) => {
     
     e.preventDefault();
-    console.log(sessionStorage.getItem("name"));
     if (message.trim() && sessionStorage.getItem("name")) {
+      console.log('sending message');
       dispatch({ type: 'socket/sendMessage', payload: {
         text: message,
         id: `${socket.id}${Math.random()}`,

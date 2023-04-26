@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect, useState, useParams, useRef, useLayoutEffect, createContext } from "react";
-import { Provider, useDispatch } from "react-redux";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Provider } from "react-redux";
 import { io } from "socket.io-client";
 
 
@@ -9,10 +9,9 @@ import { Join } from "./components/join/join";
 import { Chat } from "./components/chat/main/chat";
 
 export const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
+
 function App() {
   
-  
-  socket.auth = {};
 
   const navigate = useNavigate();
 

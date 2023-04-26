@@ -7,8 +7,10 @@ import {
 } from "../features/chat/chatSlice";
 import { socketMiddleware } from "../features/middleware/socket";
 import { io } from "socket.io-client";
+import logger from 'redux-logger'
 
 const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
+
 
 export const store = configureStore({
   reducer: {
@@ -17,5 +19,5 @@ export const store = configureStore({
     users: userReducer,
     ai: aiReducer,
   },
-  middleware: (getDefaultMiddleware =>  [...getDefaultMiddleware(), socketMiddleware(socket)])
+  middleware: (getDefaultMiddleware =>  [...getDefaultMiddleware(), socketMiddleware(socket), logger])
 });

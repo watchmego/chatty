@@ -1,17 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 
-const initialState = {
+const messageState = {
   messageList: [],
+  socket: []
+};
+const typingState = {
   typing: false,
+};
+const userState = {
   userList: [],
 };
+const aiState = {
+  aiActive: false
+};
+
 
 const messagesSlice = createSlice({
   name: "messages",
-  initialState,
+  initialState: messageState,
   reducers: {
     addMessage: (state, action) => {
+      console.log("adding message");
       state.messageList.push(action.payload);
     },
     deleteMessage: (state, action) => {
@@ -19,13 +29,19 @@ const messagesSlice = createSlice({
         (message) => message.id !== action.payload
       );
     },
+    addSocketToState: (state, action) => {
+      state.socket = "test";
+    }
   },
 });
+
+
+
 
 //currently not used
 const typingSlice = createSlice({
   name: "typing",
-  initialState,
+  initialState: typingState,
   reducers: {
     isTyping: (state, action) => {
       state.typing = action.payload;
@@ -35,7 +51,7 @@ const typingSlice = createSlice({
 
 const userSlice = createSlice({
   name: "users",
-  initialState,
+  initialState: userState,
   reducers: {
     addUser: (state, action) => {
       state.userList = action.payload;
@@ -48,10 +64,10 @@ const userSlice = createSlice({
 
 const aiSlice = createSlice({
   name: "ai",
-  initialState,
+  initialState: aiState,
   reducers: {
     aiActive: (state, action) => {
-      state.ai.active = action.payload;
+      state.aiActive = action.payload;
     }
   }
 })
@@ -64,3 +80,5 @@ export const messageReducer = messagesSlice.reducer;
 export const typingReducer = typingSlice.reducer;
 export const userReducer = userSlice.reducer;
 export const aiReducer = aiSlice.reducer;
+
+

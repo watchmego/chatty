@@ -1,16 +1,17 @@
-import { addMessage, addUser, aiActive, isTyping } from "../chat/chatSlice";
+import { addMessage, addSocketToState, addUser, aiActive, isTyping } from "../chat/chatSlice";
 
 export const socketMiddleware = (socket) => (params) => (next) => (action) => {
     const { dispatch, getState } = params;
     const { type, payload } = action;
 
     switch (type) {
-        case 'socket/connect':
+        case 'socket/connect': {
             
             const onConnectError = (err) => {
                 console.log(`connect_error due to ${err.message}`);
             };
             const onMessage = (data) => {
+                console.log("message received", data);
                 dispatch(addMessage(data));
             };
           
@@ -54,10 +55,17 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
             socket.on("connect", onConnect);
             socket.on("aiAdded", onAIJoin);
 
-            socket.connect({ auth: { name: payload } });
+            socket.auth = payload;
+            socket.connect();
             break;
-        case 'socket/disconnect':
-            socket.emit("leave", sessionStorage.getItem("room"));
+        }
+
+        case 'socket/disconnect': {
+            const room = sessionStorage.getItem("room");
+            const sessionID = sessionStorage.getItem("sessionID")
+            if(room && sessionID) {
+                socket.emit("leave", {room: sessionStorage.getItem("room"), sessionID: sessionStorage.getItem("sessionID")});
+            }
             socket.disconnect();
             socket.off("typing");
             socket.off("userList");
@@ -66,20 +74,30 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
             socket.off("messageResponse");
             socket.off("connect");
             socket.off("aiAdded");
-            
             // unload();
-            socket = null;
-        case 'socket/leave':
-            socket.emit('leave', sessionStorage.getItem("room"));
-        case 'socket/typing':
+            break;
+        }
+
+        case 'socket/leave': {
+            sessionStorage.removeItem("sessionID");
+            sessionStorage.removeItem("userID");
+            socket.emit('leave', payload);
+            break;
+        }
+        case 'socket/typing': {
             socket.emit("typing", payload);
-            return;
-        case 'socket/sendMessage':
+            break;
+        }
+
+        case 'socket/sendMessage': {
             socket.emit("message", payload);
-            return;
-        case 'socket/addAI':
+            break;
+        }
+
+        case 'socket/addAI': {
             socket.emit("addAI");
-            return;
+            break;
+        }
         
     }
     return next(action);

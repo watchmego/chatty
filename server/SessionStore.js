@@ -36,6 +36,7 @@ export class SessionStore {
     }
 
     deleteUserFromRoom(roomName, sessionId) {
+      console.log('deleting user',roomName, sessionId);
       delete this.rooms[roomName][sessionId];
       return this.findUsersInRoom(roomName);
     }

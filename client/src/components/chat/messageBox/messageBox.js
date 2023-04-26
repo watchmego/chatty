@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import "./messageBox.css";
+import { useDispatch, useSelector } from "react-redux";
 
 export const MessageBox = ({
   messages,
@@ -10,15 +11,15 @@ export const MessageBox = ({
 }) => {
   const navigate = useNavigate();
   const { room } = useParams();
+  const dispatch = useDispatch();
 
   const handleLeave = () => {
-    sessionStorage.removeItem("name");
-    sessionStorage.removeItem("sessionID");
-    sessionStorage.removeItem("userID");
-    socket.emit("leave", room);
+    console.log('leaving room',room);
+    dispatch({ type: 'socket/leave', payload: {room, sessionID: sessionStorage.getItem("sessionID")}});
     navigate("/");
   };
-
+  console.log("socket", console.log(useSelector(state => state.socket)))
+ 
   console.log(messages);
   return (
     <>

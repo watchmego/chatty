@@ -4,7 +4,7 @@ import { MessageBox } from "../messageBox/messageBox";
 import { TextInput } from "../textBox/textInput";
 import { Navigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage, addUser } from "../../../features/chat/chatSlice";
+import { addMessage, addMessageNew, addSocketToState, addUser } from "../../../features/chat/chatSlice";
 
 import "./chat.css";
 
@@ -36,25 +36,29 @@ export const Chat = ({ socket }) => {
 
   // temporary variables to initialise app
   const dispatch = useDispatch();
+
   
 
   const name = sessionStorage.getItem("name");
   const sessionID = sessionStorage.getItem("sessionID");
   const userID = sessionStorage.getItem("userID");
 
-  socket.auth = {
+  const auth = {
             name: name,
             sessionID: sessionID,
             userID: userID
           }
 
   useEffect(() => {
-    dispatch({ type: 'socket/connect', payload: socket});
+    dispatch({ type: 'socket/connect', payload: auth});
+    
+    
 
 
 
     return () => {
-      dispatch({ type: 'socket/disconnect', payload: socket})
+      console.log('disocnnecting socket');
+      dispatch({ type: 'socket/disconnect'})
       // window.removeEventListener('beforeunload', unload);
     };
   }, []);

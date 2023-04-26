@@ -30,26 +30,22 @@ io.on('connection', (socket) => {
     //create persistent session
     let sessionExists = false;
     const sessionID = socket.handshake.auth?.sessionID;
-    console.log("sessionID", socket, sessionID, sessionStore.findAllSessions());
     if(sessionID) {
          // find existing session
         const session = sessionStore.findSession(sessionID);
         console.log('sessionStore',sessionStore.findSession(sessionID));
         if (session) {
-          socket.sessionID = sessionID;
-          socket.userId = session.userId;
-          socket.username = session.username;
           sessionExists = true;
           }
         }
     
     if (!sessionExists) {
       console.log('creating new sessionStore');
-      socket.sessionID = uuidv4();
-      socket.userId = uuidv4();
-      sessionStore.saveSession(socket.sessionID, {
+      socket.handshake.auth.sessionID = uuidv4();
+      socket.handshake.auth.userId = uuidv4();
+      sessionStore.saveSession(socket.handshake.auth.sessionID, {
         socketId: socket.id,
-        userId: socket.userId,
+        userId: socket.handshake.auth.userId,
         username: socket.handshake.auth.name,
         connected: true,
       });
@@ -58,8 +54,8 @@ io.on('connection', (socket) => {
     } 
     console.log('about to emit session');
     socket.emit("session", {
-      sessionID: socket.sessionID,
-      userID: socket.userId,
+      sessionID: socket.handshake.auth.sessionID,
+      userID: socket.handshake.auth.userId,
     });
 
 
@@ -77,10 +73,10 @@ io.on('connection', (socket) => {
 
     socket.join(roomName);
     sessionStore.saveRoom(roomName);
-    sessionStore.saveUserInRoom(roomName, {sessionId: socket.sessionID, name: name, socketId: socket.userId});
+    sessionStore.saveUserInRoom(roomName, {sessionId: socket.handshake.auth.sessionID, name: name, socketId: socket.handshake.auth.userId});
     socket.emit("created");
     console.log("joined room")
-    console.log(socket.sessionID, room);
+    console.log(socket.handshake.auth.sessionID, room);
 
     
     const users = sessionStore.findUsersInRoom(roomName);
@@ -89,7 +85,6 @@ io.on('connection', (socket) => {
   });
   //Listens and logs the message to the console
   socket.on('message', (data) => {
-    //console.log('message received', data);
     const {roomName} = data;
     io.in(roomName).fetchSockets().then((sockets) => {console.log('users in room', sockets[0])});
     io.to(roomName).timeout(5000).emit('messageResponse', data);
@@ -103,13 +98,14 @@ io.on('connection', (socket) => {
   })
   socket.onAny((event, data) => console.log('catchall',event, data));
 
-  socket.on('leave', (roomName) => {
+  socket.on('leave', (payload = {}) => {
+    const {room, sessionID} = payload;
     console.log('🔥: A user disconnected');
-    console.log(socket);
-    const users = sessionStore.deleteUserFromRoom(roomName, socket.sessionID)
-    sessionStore.deleteSession(socket.sessionID);
+    console.log(room, sessionID);
+    const users = sessionStore.deleteUserFromRoom(room, sessionID)
+    sessionStore.deleteSession(sessionID); 
     console.log("users post", users); 
-    io.to(roomName).timeout(2000).emit("userList", users);
+    io.to(room).timeout(2000).emit("userList", users);
     socket.disconnect();
   });
   
