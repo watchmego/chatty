@@ -2,6 +2,7 @@
 
 # dependencies
 */amplify/*
+*/amplify-old/*
 */src/aws-exports.js
 */node_modules
 **/old
