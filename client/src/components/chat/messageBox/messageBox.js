@@ -1,33 +1,35 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
 import "./messageBox.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 export const MessageBox = ({
   messages,
   lastMessageRef,
-  socket,
+  handleHelp,
   typingStatus,
 }) => {
   const navigate = useNavigate();
-  const { room } = useParams();
+  const room = sessionStorage.getItem("room");
   const dispatch = useDispatch();
 
   const handleLeave = () => {
-    console.log('leaving room',room);
     dispatch({ type: 'socket/leave', payload: {room, sessionID: sessionStorage.getItem("sessionID")}});
     navigate("/");
   };
-  console.log("socket", console.log(useSelector(state => state.socket)))
  
   console.log(messages);
   return (
     <>
       <header className="chatHeader">
-        <p>Hangout with Colleagues</p>
-        <button className="leaveButton" onClick={handleLeave}>
-          Leave Chat
-        </button>
+        <h2>{room}</h2>
+        <div>
+          <button className="mbButton" onClick={handleHelp}>
+            Help
+          </button>
+          <button className="mbButton" onClick={handleLeave}>
+            Leave Chat
+          </button>
+        </div>
       </header>
       <div className="messageContainer">
         {messages.map((message) =>

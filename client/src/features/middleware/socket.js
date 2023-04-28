@@ -28,7 +28,7 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
                     }
                 sessionStorage.setItem("sessionID", sessionID);
                 sessionStorage.setItem("userID", userID);
-                socket.emit("join", { name: sessionStorage.getItem("name"), roomName: sessionStorage.getItem("room") });
+                socket.emit('join', { name: sessionStorage.getItem("name"), roomName: sessionStorage.getItem("room") });
             };
           
             const onUserUpdate = (data) => {
@@ -43,8 +43,13 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
                 }
             };
           
-            const onAIJoin = () => {
-                dispatch(aiActive(true));
+            const onAddRemoveAI = (aiAdded) => {
+                if(aiAdded) {
+                    console.log("aijoin");
+                    dispatch(aiActive(true));
+                } else {
+                    dispatch(aiActive(false));
+                }
             }
           
             socket.on("typing", onTyping);
@@ -53,7 +58,7 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
             socket.on("connect_error", onConnectError);
             socket.on("messageResponse", onMessage);
             socket.on("connect", onConnect);
-            socket.on("aiAdded", onAIJoin);
+            socket.on("addRemoveAI", onAddRemoveAI);
 
             socket.auth = payload;
             socket.connect();
@@ -94,8 +99,8 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
             break;
         }
 
-        case 'socket/addAI': {
-            socket.emit("addAI");
+        case 'socket/addRemoveAI': {
+            socket.emit("addRemoveAI", payload);
             break;
         }
         

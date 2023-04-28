@@ -8,8 +8,9 @@
   background-color: #f9f5eb;
 }
 
-.leaveButton {
+.mbButton {
   padding: 10px;
+  margin-left: 10px;
   width: 150px;
   border: none;
   outline: none;

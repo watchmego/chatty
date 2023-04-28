@@ -6,8 +6,6 @@ dotenv.config();
 
 let openai;
 let socket;
-let aiActive = false;
-let aiSessionID;
 
 let conversation = [];
 
@@ -32,31 +30,16 @@ export const initialiseAI = () => {
 // })
 
 export const chatAddAI = (room) => {
-    if(!aiActive) {
-        conversation = [];
-        socket = io("http://localhost:8000");
-        socket.on("connect_error", (err) => {
-            console.log(`connect_error due to ${err.message}`);
-        });
-        socket.on("session", ({sessionID}) => {
-            console.log('joining room', room, aiSessionID)
-            socket.emit("join", {name: 'AI Assistant', roomName: room})
-            aiSessionID = sessionID;
-        });
-        socket.connect();
-        aiActive = true;
-        return true;
-    } 
-    return false;
+    conversation = [];
+    socket = io("http://localhost:8000");
+    socket.on("connect_error", (err) => {
+        console.log(`connect_error due to ${err.message}`);
+      });
+    socket.on("connect", () => {
+          socket.emit("join", {name: 'AI Assistant', socketID: socket.id})
+      });
+    //socket.connect();
 } 
-
-export const chatRemoveAI = (room) => {
-    if(aiSessionID) {
-        console.log('removing AI from room', room, aiSessionID);
-        socket.emit('leave', {room, sessionID: aiSessionID});
-    }
-    aiActive = false;
-}
 
 export const sendAIMessage = async (data) => { 
 
@@ -80,9 +63,8 @@ export const sendAIMessage = async (data) => {
         if (response.data.choices[0].message.content.trim()) {
             socket.emit("message",{
                 text: response.data.choices[0].message.content, 
-                name: 'AI Assistant',
-                key: Math.random(),
-                roomName: data.roomName
+                id: `${socket.id}${Math.random()}`,
+                name: 'AI Assistant'
         }); 
         } 
     

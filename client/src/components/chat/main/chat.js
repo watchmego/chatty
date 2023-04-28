@@ -2,37 +2,23 @@ import { useState, useEffect, useRef } from "react";
 import { InfoPanel } from "../infoPanel/infoPanel";
 import { MessageBox } from "../messageBox/messageBox";
 import { TextInput } from "../textBox/textInput";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addMessage, addMessageNew, addSocketToState, addUser } from "../../../features/chat/chatSlice";
 
 import "./chat.css";
+import { Help } from "../modal/help";
 
-export const Chat = ({ socket }) => {
-  // const unload = (e) => {
-  //     e.preventDefault();
-  //     socket.emit("message",{
-  //         text: "leaving room",
-  //         id: `${socket.id}${Math.random()}`,
-  //         name: sessionStorage.getItem('name'),
-  //         key: Math.random(),
-  //         roomName: room
-  //     });
-  //     socket.emit('leave', room)
-  //     socket.disconnect();
-  // }
+export const Chat = () => {
 
-  // const { room } = useParams();
-  //chat message list
   const messages = useSelector((state) => state.messages.messageList);
   const users = useSelector((state) => state.users.userList);
   const typingStatus = useSelector((state) => state.typing.typing);
-  console.log(typingStatus);
-  const [aiActive, setAIActive] = useState(false);
+  const aiActive = useSelector((state => state.ai.aiActive));
+  const [helpOpen, setHelpOpen] = useState(false);
+  
 
   //ref to keep last message in view
   const lastMessageRef = useRef(null);
-  const timeoutId = useRef(0);
 
   // temporary variables to initialise app
   const dispatch = useDispatch();
@@ -50,16 +36,18 @@ export const Chat = ({ socket }) => {
           }
 
   useEffect(() => {
+    //connect socket
     dispatch({ type: 'socket/connect', payload: auth});
+    //add listener to disconnect if browser is closed
+    window.addEventListener('beforeunload', () => dispatch({ type: 'socket/disconnect'}))
     
     
 
 
 
     return () => {
-      console.log('disocnnecting socket');
-      dispatch({ type: 'socket/disconnect'})
-      // window.removeEventListener('beforeunload', unload);
+      dispatch({ type: 'socket/disconnect'});
+      window.removeEventListener('beforeunload', () => dispatch({ type: 'socket/disconnect'}));
     };
   }, []);
 
@@ -70,21 +58,30 @@ export const Chat = ({ socket }) => {
     }
   }, [messages]);
 
+  //help popup
+  const handleHelpModal = () => {
+    setHelpOpen(!helpOpen);
+  }
+
+
   return (
     <>
       {!sessionStorage.getItem("name") ? (
         <Navigate to="/" />
       ) : (
         <div className="main">
-          <InfoPanel socket={socket} users={users} ai={aiActive} />
+          <InfoPanel  users={users} aiActive={aiActive} />
           <div className="chatContainer">
             <MessageBox
               messages={messages}
               lastMessageRef={lastMessageRef}
               typingStatus={typingStatus}
-              socket={socket}
+              handleHelp={handleHelpModal}
             />
-            <TextInput socket={socket} />
+            <TextInput />
+            {helpOpen &&
+            <Help handleHelp={handleHelpModal}/>
+            }
           </div>
         </div>
       )}

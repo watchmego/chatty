@@ -1,0 +1,88 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-chattyapp-socketio-152559-authRole",
+      "UnauthRoleArn": "arn:aws:iam::997388814125:role/amplify-chattyapp-socketio-152559-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::997388814125:role/amplify-chattyapp-socketio-152559-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-chattyapp-socketio-152559-deployment",
+      "UnauthRoleName": "amplify-chattyapp-socketio-152559-unauthRole",
+      "StackName": "amplify-chattyapp-socketio-152559",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:997388814125:stack/amplify-chattyapp-socketio-152559/06255e40-e575-11ed-9553-06c3f7854ce6",
+      "AmplifyAppId": "d397jz5av4te85",
+      "NetworkStackS3Url": "https://s3.amazonaws.com/amplify-chattyapp-socketio-152559-deployment/amplify-cfn-templates/networkingStackTemplate.json"
+    }
+  },
+  "api": {
+    "container1941234e": {
+      "apiType": "REST",
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "ClusterName",
+            "VpcId",
+            "VpcCidrBlock",
+            "SubnetIds",
+            "VpcLinkId",
+            "CloudMapNamespaceId"
+          ],
+          "category": "",
+          "resourceName": "NetworkStack"
+        }
+      ],
+      "deploymentMechanism": "FULLY_MANAGED",
+      "iamAccessUnavailable": true,
+      "imageSource": {
+        "type": "CUSTOM"
+      },
+      "providerPlugin": "awscloudformation",
+      "resourceName": "container1941234e",
+      "restrictAccess": false,
+      "service": "ElasticContainer",
+      "skipHashing": false,
+      "exposedContainer": {
+        "name": "api",
+        "port": 8000
+      },
+      "lastPushTimeStamp": "2023-04-28T03:43:36.550Z",
+      "lastPackageTimeStamp": "2023-04-28T03:28:54.403Z",
+      "distZipFilename": "container1941234e-697661714452696d362f-build.zip",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-chattyapp-socketio-152559-deployment/amplify-cfn-templates/api/container1941234e-cloudformation-template.json",
+        "logicalId": "apicontainer1941234e"
+      },
+      "output": {
+        "ServiceName": "container1941234e-service-api-8000",
+        "PipelineName": "amplify-chattyapp-socketio-152559-container1941234e-service-api-8000",
+        "ApiName": "container1941234e",
+        "RootUrl": "https://4pqf5tals9.execute-api.ap-southeast-2.amazonaws.com",
+        "ContainerNames": "api",
+        "ClusterName": "amplify-chattyapp-socketio-152559-NetworkStack-MGOIIZJTEJ0Z-Cluster-VNtE6fJyzIrm"
+      },
+      "lastPushDirHash": "+AaVEiNFHiIDRMEQmHHEE3AEp3M="
+    }
+  },
+  "hosting": {
+    "S3AndCloudFront": {
+      "providerPlugin": "awscloudformation",
+      "service": "S3AndCloudFront",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-chattyapp-socketio-152559-deployment/amplify-cfn-templates/hosting/template.json",
+        "logicalId": "hostingS3AndCloudFront"
+      },
+      "lastPushTimeStamp": "2023-04-28T03:43:36.550Z",
+      "output": {
+        "CloudFrontSecureURL": "https://ds8w3lducwe32.cloudfront.net",
+        "S3BucketSecureURL": "https://chattypp-20230419092355-hostingbucket-socketio.s3.amazonaws.com",
+        "CloudFrontOriginAccessIdentity": "EYV5DYUUU8WAZ",
+        "WebsiteURL": "http://chattypp-20230419092355-hostingbucket-socketio.s3-website-ap-southeast-2.amazonaws.com",
+        "CloudFrontDistributionID": "E3TIZ6XM5OPIKT",
+        "Region": "ap-southeast-2",
+        "HostingBucketName": "chattypp-20230419092355-hostingbucket-socketio",
+        "CloudFrontDomainName": "ds8w3lducwe32.cloudfront.net"
+      },
+      "lastPushDirHash": "JGWTlUwO+h+q+Hg4fPcOqS9f7so="
+    }
+  }
+}

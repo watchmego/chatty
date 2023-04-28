@@ -10,38 +10,34 @@ export const TextInput = ({ socket }) => {
   const [typing, setTyping] = useState(false);
   const { room } = useParams();
   const dispatch = useDispatch();
+  const aiRegex = /^[Aa][Ii](\s|:)/;
+
 
   const handleSend = (e) => {
     
     e.preventDefault();
     if (message.trim() && sessionStorage.getItem("name")) {
-      console.log('sending message');
       dispatch({ type: 'socket/sendMessage', payload: {
         text: message,
-        id: `${socket.id}${Math.random()}`,
         name: sessionStorage.getItem("name"),
         key: Math.random(),
         roomName: room,
       }});
     }
-    // if (message.trim() && sessionStorage.getItem("name")) {
-    //   console.log("sending message");
-    //   socket.emit("message", {
-    //     text: message,
-    //     id: `${socket.id}${Math.random()}`,
-    //     name: sessionStorage.getItem("name"),
-    //     key: Math.random(),
-    //     roomName: room,
-    //   });
-    // }
-    handleTyping(true);
     setMessage("");
   };
 
-  const handleTyping = (remove = false) => {
-    console.log("handletyping called with remove", remove);
+  //text input event handler
+  const handleTyping = (input, remove = false) => {
+
+    setMessage(input.target.value);
+    //detect whether use is messaging AI
+    if(aiRegex.test(input.target.value)) {
+      setMessage("AI:");
+    }
+    //dispatch active typer event to server
     if (!typing) {
-      socket.emit("typing", sessionStorage.getItem("name"), remove, room);
+      dispatch({type: 'socket/typing', payload: {name: sessionStorage.getItem("name"), remove, room}});
       setTyping(true);
       setTimeout(() => setTyping(false), 500);
     }
@@ -56,8 +52,7 @@ export const TextInput = ({ socket }) => {
           className="textInput"
           rows="3"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={() => handleTyping()}
+          onInput={(input) => handleTyping(input)}
         />
         <button type="submit" className="sendButton">
           Send

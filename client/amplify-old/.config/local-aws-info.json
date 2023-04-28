@@ -1,0 +1,27 @@
+{
+  "dev": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "default"
+  },
+  "chatty": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "default"
+  },
+  "chattynew": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "default"
+  },
+  "chattyv": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "default"
+  },
+  "socketio": {
+    "configLevel": "project",
+    "useProfile": true,
+    "profileName": "default"
+  }
+}

@@ -2,7 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import dotenv from 'dotenv'
-import { initialiseAI, chatAddAI, sendAIMessage, chatRemoveAI } from "./openAI/AI.js";
+import { initialiseAI, chatAddAI, sendAIMessage } from "./openAI/AI.js";
 import { v4 as uuidv4 } from 'uuid';
 import { SessionStore } from './SessionStore.js'
 dotenv.config()
@@ -30,22 +30,26 @@ io.on('connection', (socket) => {
     //create persistent session
     let sessionExists = false;
     const sessionID = socket.handshake.auth?.sessionID;
+    console.log("sessionID", socket.handshake.auth, sessionID, sessionStore.findAllSessions());
     if(sessionID) {
          // find existing session
         const session = sessionStore.findSession(sessionID);
         console.log('sessionStore',sessionStore.findSession(sessionID));
         if (session) {
+          socket.sessionID = sessionID;
+          socket.userId = session.userId;
+          socket.username = session.username;
           sessionExists = true;
           }
         }
     
     if (!sessionExists) {
       console.log('creating new sessionStore');
-      socket.handshake.auth.sessionID = uuidv4();
-      socket.handshake.auth.userId = uuidv4();
-      sessionStore.saveSession(socket.handshake.auth.sessionID, {
+      socket.sessionID = uuidv4();
+      socket.userId = uuidv4();
+      sessionStore.saveSession(socket.sessionID, {
         socketId: socket.id,
-        userId: socket.handshake.auth.userId,
+        userId: socket.userId,
         username: socket.handshake.auth.name,
         connected: true,
       });
@@ -54,8 +58,8 @@ io.on('connection', (socket) => {
     } 
     console.log('about to emit session');
     socket.emit("session", {
-      sessionID: socket.handshake.auth.sessionID,
-      userID: socket.handshake.auth.userId,
+      sessionID: socket.sessionID,
+      userID: socket.userId,
     });
 
 
@@ -73,10 +77,10 @@ io.on('connection', (socket) => {
 
     socket.join(roomName);
     sessionStore.saveRoom(roomName);
-    sessionStore.saveUserInRoom(roomName, {sessionId: socket.handshake.auth.sessionID, name: name, socketId: socket.handshake.auth.userId});
+    sessionStore.saveUserInRoom(roomName, {sessionId: socket.sessionID, name: name, socketId: socket.userId});
     socket.emit("created");
     console.log("joined room")
-    console.log(socket.handshake.auth.sessionID, room);
+    console.log(socket.sessionID, room);
 
     
     const users = sessionStore.findUsersInRoom(roomName);
@@ -85,35 +89,27 @@ io.on('connection', (socket) => {
   });
   //Listens and logs the message to the console
   socket.on('message', (data) => {
+    //console.log('message received', data);
     const {roomName} = data;
+    io.in(roomName).fetchSockets().then((sockets) => {console.log('users in room', sockets[0])});
     io.to(roomName).timeout(5000).emit('messageResponse', data);
-    if(data.text.startsWith("AI:")) {
+    if(data.text.slice(0,10).toLowerCase().includes("assistant")) {
       sendAIMessage(data);
     }
   });
-  socket.on('addRemoveAI', (payload) => {
-    const { room, invite } = payload;
-    if(invite) {
-      const result = chatAddAI(room);
-      if(result) {
-        io.to(room).timeout(2000).emit("addRemoveAI", true);
-        console.log('ai added to chat');
-        }
-    } else {
-      chatRemoveAI(room);
-      io.to(room).timeout(2000).emit("addRemoveAI", false);
-    }
+  socket.on('addAI', () => {
+    chatAddAI();
+    console.log('ai added to chat');
   })
   socket.onAny((event, data) => console.log('catchall',event, data));
 
-  socket.on('leave', (payload = {}) => {
-    const {room, sessionID} = payload;
+  socket.on('leave', (roomName) => {
     console.log('🔥: A user disconnected');
-    console.log(room, sessionID);
-    const users = sessionStore.deleteUserFromRoom(room, sessionID)
-    sessionStore.deleteSession(sessionID); 
+    console.log(socket);
+    const users = sessionStore.deleteUserFromRoom(roomName, socket.sessionID)
+    sessionStore.deleteSession(socket.sessionID);
     console.log("users post", users); 
-    io.to(room).timeout(2000).emit("userList", users);
+    io.to(roomName).timeout(2000).emit("userList", users);
     socket.disconnect();
   });
   

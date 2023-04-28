@@ -8,13 +8,14 @@ import { store } from "./app/store";
 import { Join } from "./components/join/join";
 import { Chat } from "./components/chat/main/chat";
 
+//initialise socket
 export const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
 
 function App() {
-  
 
   const navigate = useNavigate();
 
+  //enable direct access to website sub-pages
   useEffect(() => {
     const path = window.location.pathname;
     if (path !== '/') {

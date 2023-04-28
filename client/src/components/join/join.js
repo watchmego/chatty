@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./join.css";
 
 export const Join = () => {
@@ -8,7 +8,8 @@ export const Join = () => {
   const [room, setRoom] = useState("");
 
   const handleSubmit = async (e) => {
-    //add authentication middleware here
+    //save user info to session storage
+    //additional authentication middleware can go here
     e.preventDefault();
     sessionStorage.setItem("name", name);
     sessionStorage.setItem("room", room);
