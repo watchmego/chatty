@@ -11,6 +11,12 @@ import logger from 'redux-logger'
 
 const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
 
+let extraMiddleware = [];
+
+if(process.env.NODE_ENV === 'development') {
+  extraMiddleware.push(logger);
+}
+
 
 export const store = configureStore({
   reducer: {
@@ -19,5 +25,5 @@ export const store = configureStore({
     users: userReducer,
     ai: aiReducer,
   },
-  middleware: (getDefaultMiddleware =>  [...getDefaultMiddleware(), socketMiddleware(socket), logger])
+  middleware: getDefaultMiddleware => [...getDefaultMiddleware(), socketMiddleware(socket), ...extraMiddleware]
 });

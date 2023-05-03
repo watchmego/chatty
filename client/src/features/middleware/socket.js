@@ -11,16 +11,16 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
                 console.log(`connect_error due to ${err.message}`);
             };
             const onMessage = (data) => {
-                console.log("message received", data);
                 dispatch(addMessage(data));
             };
           
+            //currently not used
             const onConnect = () => {
-                console.log("connecting socket", socket.auth);
+                
             };
           
             const onSession = ({ sessionID, userID, name }) => {
-                console.log("session data received");
+
                 socket.auth =
                     {
                         sessionID: sessionID,
@@ -32,12 +32,10 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
             };
           
             const onUserUpdate = (data) => {
-                console.log("userdata", data);
                 dispatch(addUser(data));
             };
           
             const onTyping = (message) => {
-                console.log("typgin");
                 if (message !== `${sessionStorage.getItem("name")} is typing`) {
                   dispatch(isTyping(message));
                 }
@@ -45,7 +43,6 @@ export const socketMiddleware = (socket) => (params) => (next) => (action) => {
           
             const onAddRemoveAI = (aiAdded) => {
                 if(aiAdded) {
-                    console.log("aijoin");
                     dispatch(aiActive(true));
                 } else {
                     dispatch(aiActive(false));

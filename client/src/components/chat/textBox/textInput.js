@@ -2,15 +2,15 @@ import { useState } from "react";
 
 import "./textInput.css";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-export const TextInput = ({ socket }) => {
+export const TextInput = () => {
 
   const [message, setMessage] = useState("");
   const [typing, setTyping] = useState(false);
   const { room } = useParams();
   const dispatch = useDispatch();
-  const aiRegex = /^[Aa][Ii](\s|:)/;
+  const aiRegex = /^[Aa][Ii](\s)/;
 
 
   const handleSend = (e) => {
@@ -32,8 +32,10 @@ export const TextInput = ({ socket }) => {
 
     setMessage(input.target.value);
     //detect whether use is messaging AI
-    if(aiRegex.test(input.target.value)) {
-      setMessage("AI:");
+    let regexMatch = input.target.value.match(aiRegex);
+    
+    if(regexMatch?.length > 0) {
+      setMessage(message => "AI:" + message.slice(regexMatch[0].length));
     }
     //dispatch active typer event to server
     if (!typing) {
