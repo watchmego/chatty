@@ -1,4 +1,4 @@
-import { addMessage, addSocketToState, addUser, aiActive, isTyping } from "../chat/chatSlice";
+import { addMessage, addUser, aiActive, isTyping } from "../chat/chatSlice";
 
 export const socketMiddleware = (socket) => (params) => (next) => (action) => {
     const { dispatch, getState } = params;

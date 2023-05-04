@@ -4,15 +4,11 @@ import { useDispatch } from "react-redux";
 import "./infoPanel.css";
 
 
-export const InfoPanel = ({ socket, users, aiActive }) => {
-  console.log(users);
+export const InfoPanel = ({ users, aiActive }) => {
   const dispatch = useDispatch();
   //AI 'user' invite status
   const handleAIInvite = () => {
-    console.log('ai added?', aiActive);
     if(!aiActive) {
-      console.log(socket);
-      console.log('adding ai');
       dispatch({type: "socket/addRemoveAI", payload: {room: sessionStorage.getItem("room"), invite: true}})
     } else {
       dispatch({type: "socket/addRemoveAI", payload: {room: sessionStorage.getItem("room"), invite: false}})

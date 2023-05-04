@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const messageState = {
   messageList: [],
-  socket: []
 };
 const typingState = {
   typing: false,
@@ -28,8 +27,10 @@ const messagesSlice = createSlice({
         (message) => message.id !== action.payload
       );
     },
-    addSocketToState: (state, action) => {
-      state.socket = "test";
+    clearMessages: (state, action) => {
+      if(action.room != state.messageList[0]?.roomName) {
+        state.messageList = [];
+      }
     }
   },
 });
@@ -71,7 +72,7 @@ const aiSlice = createSlice({
   }
 })
 
-export const { addMessage, deleteMessage } = messagesSlice.actions;
+export const { addMessage, deleteMessage, clearMessages } = messagesSlice.actions;
 export const { isTyping } = typingSlice.actions;
 export const { addUser, removeUser } = userSlice.actions;
 export const { aiActive } = aiSlice.actions;

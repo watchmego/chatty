@@ -17,7 +17,6 @@ export const MessageBox = ({
     navigate("/");
   };
  
-  console.log(messages);
   return (
     <>
       <header className="chatHeader">
