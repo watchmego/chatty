@@ -8,20 +8,20 @@ jobs:
     name: Deploy client
     runs-on: ubuntu-latest
     steps:
-      - working-directory: client
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only -a chatty-client
+        working-directory: client
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   deployserver:
     name: Deploy server
     runs-on: ubuntu-latest
     steps:
-      - working-directory: server
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only -a chatty-server
+        working-directory: server
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
