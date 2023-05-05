@@ -1,42 +1,16 @@
-# syntax = docker/dockerfile:1
+FROM public.ecr.aws/bitnami/node:14-prod-debian-10
 
-# Adjust NODE_VERSION as desired
-ARG NODE_VERSION=16.15.1
-FROM node:${NODE_VERSION}-slim as base
+ENV REACT_APP_SERVER=https://chatty-frontend.fly.dev:8000
 
-LABEL fly_launch_runtime="NodeJS"
+EXPOSE 443
 
-# NodeJS app lives here
-WORKDIR /app
-
-# Set production environment
-ENV NODE_ENV=production
+WORKDIR /usr/src/app
 
 
-# Throw-away build stage to reduce size of final image
-FROM base as build
-
-# Install packages needed to build node modules
-RUN apt-get update -qq && \
-    apt-get install -y python-is-python3 pkg-config build-essential 
-
-# Install node modules
-COPY --link package.json package-lock.json .
-RUN npm install
-
-# Copy application code
-COPY --link . .
-
-# Build application
-RUN npm run build
+COPY package*.json .
+RUN npm install --production
+COPY . .
 
 
+CMD [ "sh", "-c", "npm start" ]
 
-# Final stage for app image
-FROM base
-
-# Copy built application
-COPY --from=build /app /app
-
-# Start the server by default, this can be overwritten at runtime
-CMD [ "npm", "run", "start" ]
