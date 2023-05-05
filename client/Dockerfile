@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:8 as reactbuild
+FROM node:14 as reactbuild
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install --production
