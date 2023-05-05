@@ -1,7 +1,7 @@
 FROM public.ecr.aws/bitnami/node:14-prod-debian-10
 
-ENV PORT=8000
-EXPOSE 8000
+ENV PORT=8080
+EXPOSE 8080
 
 WORKDIR /usr/src/app
 

@@ -1,6 +1,6 @@
 FROM public.ecr.aws/bitnami/node:14-prod-debian-10
 
-ENV REACT_APP_SERVER=https://chatty-server.fly.dev:8000
+ENV REACT_APP_SERVER=https://chatty-server.fly.dev:8080
 
 EXPOSE 443
 
