@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for chatty-server on 2023-05-05T13:23:37+12:00
+# fly.toml app configuration file generated for chatty-server on 2023-05-06T11:27:53+12:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -10,21 +10,21 @@ primary_region = "syd"
   builtin = "node"
 
 [[services]]
-  internal_port = 8080
   protocol = "tcp"
+  internal_port = 8080
 
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
   [services.concurrency]
     hard_limit = 25
     soft_limit = 20
 
-  [[services.ports]]
-    handlers = ["http"]
-    port = "80"
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = "443"
-
   [[services.tcp_checks]]
-    interval = 10000
-    timeout = 2000
+    interval = "10s"
+    timeout = "2s"
+    restart_limit = 0

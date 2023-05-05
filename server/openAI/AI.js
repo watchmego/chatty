@@ -60,9 +60,11 @@ export const chatRemoveAI = (room) => {
 }
 
 export const sendAIMessage = async (data) => { 
-
-
-    const response = await openai.createChatCompletion({
+    let response;
+    console.log("openai status",openai);
+try {
+    console.log("running try/catch");
+    response = await openai.createChatCompletion({
         model: "gpt-3.5-turbo",
         messages: [
             {"role": "system", "content": "You are a helpful assistant"},
@@ -85,7 +87,9 @@ export const sendAIMessage = async (data) => {
                 key: Math.random(),
                 roomName: data.roomName
         }); 
-        } 
+        }
+        console.log('response received from ai', response);
+    } catch (err) {console.log(err)}
     
     conversation = [...conversation, {"role": "user", "content": data.text}, {"role": "assistant", "content": response.data.choices[0].message.content.trim()}];
 
