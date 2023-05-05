@@ -12,7 +12,7 @@ let aiSessionID;
 let conversation = [];
 
 export const initialiseAI = () => {
-    const configuration = new Configuration({
+    const configuration = new Configuration({ 
     apiKey: process.env.OPENAI_API_KEY,
     });
     openai = new OpenAIApi(configuration);
@@ -33,8 +33,9 @@ export const initialiseAI = () => {
 
 export const chatAddAI = (room) => {
     if(!aiActive) {
+        const port = process.env.PORT || 8000
         conversation = [];
-        socket = io("http://localhost:8080");
+        socket = io(`http://localhost:${port}`);
         socket.on("connect_error", (err) => {
             console.log(`connect_error due to ${err.message}`);
         });
