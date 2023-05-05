@@ -3,7 +3,7 @@ FROM node:8 as reactbuild
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install --production
-RUN npm build
+RUN npm run build
 
 # Stage 2
 FROM nginx:alpine
