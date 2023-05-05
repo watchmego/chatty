@@ -9,6 +9,7 @@ import { Join } from "./components/join/join";
 import { Chat } from "./components/chat/main/chat";
 
 //initialise socket
+console.log(process.env.REACT_APP_SERVER);
 export const socket = io(process.env.REACT_APP_SERVER, {autoConnect: false});
 
 function App() {
