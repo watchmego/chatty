@@ -13,7 +13,7 @@
     "socket.io-client": "^4.6.1",
   },
   "devDependencies":{
-    "redux-logger": "^3.0.6",
+    "redux-logger": "^3.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
