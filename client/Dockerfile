@@ -1,17 +1,19 @@
-FROM public.ecr.aws/bitnami/node:14-prod-debian-10
+# Stage 1
+FROM node:8 as react-build
+WORKDIR /usr/src/app
+COPY . .
+RUN npm install --production
+RUN npm build
+
+# Stage 2
+FROM nginx:alpine
 
 ENV REACT_APP_SERVER=https://chatty-server.fly.dev:8080
 
-EXPOSE 443
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY build /usr/share/nginx/html
 
-WORKDIR /usr/src/app
+EXPOSE 80
 
-
-COPY package*.json .
-RUN npm install --production
-COPY . .
-RUN npm run build
-
-
-CMD [ "sh", "-c", "npx serve build" ]
+CMD ["nginx", "-g", "daemon off;"]
 
