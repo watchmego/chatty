@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { SessionStore } from './SessionStore.js'
 dotenv.config()
 
-
+const port = process.env.PORT;
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { 
@@ -151,7 +151,7 @@ io.on('connection', (socket) => {
 
 
 
-httpServer.listen((8000), () => {
+httpServer.listen((port || 8000), () => {
   initialiseAI();
   console.log('listening on port 8000');
 });
