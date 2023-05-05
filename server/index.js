@@ -12,7 +12,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { 
   cors: {
-    origin: [process.env.CLIENT,"http://localhost:3000"]
+    origin: "*"
   },
  });
 
@@ -153,7 +153,7 @@ io.on('connection', (socket) => {
 
 httpServer.listen((port || 8000), () => {
   initialiseAI();
-  console.log('listening on port 8000');
+  console.log(`listening on port ${port}`);
 });
 
 console.log(io.eventNames());
