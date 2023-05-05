@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:8 as react-build
+FROM node:8 as reactbuild
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install --production
@@ -11,7 +11,7 @@ FROM nginx:alpine
 ENV REACT_APP_SERVER=https://chatty-server.fly.dev:8080
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY /usr/src/app/build /usr/share/nginx/html
+COPY --from=reactbuild /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE 80
 
