@@ -6,8 +6,6 @@
 app = "chatty-server"
 primary_region = "syd"
 
-app = "flyio-websockets"
-
 [build]
   builtin = "node"
 
