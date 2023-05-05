@@ -13,7 +13,7 @@ jobs:
       - run: flyctl deploy --remote-only -a chatty-client
         working-directory: client
         env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_API_TOKEN: ${{ secrets.CHATTYCLIENT }}
   deployserver:
     name: Deploy server
     runs-on: ubuntu-latest
@@ -23,5 +23,5 @@ jobs:
       - run: flyctl deploy --remote-only -a chatty-server
         working-directory: server
         env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_API_TOKEN: ${{ secrets.CHATTYSERVER }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
