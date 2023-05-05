@@ -34,7 +34,7 @@ export const initialiseAI = () => {
 export const chatAddAI = (room) => {
     if(!aiActive) {
         conversation = [];
-        socket = io("http://localhost:8000");
+        socket = io("http://localhost:8080");
         socket.on("connect_error", (err) => {
             console.log(`connect_error due to ${err.message}`);
         });
