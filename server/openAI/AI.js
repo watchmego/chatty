@@ -61,7 +61,6 @@ export const chatRemoveAI = (room) => {
 
 export const sendAIMessage = async (data) => { 
     let response;
-    console.log("openai status",openai);
 try {
     console.log("running try/catch");
     response = await openai.createChatCompletion({
@@ -88,12 +87,13 @@ try {
                 roomName: data.roomName
         }); 
         }
-        console.log('response received from ai', response);
+       // console.log('response received from ai', response);
+        conversation = [...conversation, {"role": "user", "content": data.text}, {"role": "assistant", "content": response.data.choices[0].message.content.trim()}];
+
+        while(conversation.length > 4096) {
+            conversation.splice(0,1);
+        }
     } catch (err) {console.log(err)}
     
-    conversation = [...conversation, {"role": "user", "content": data.text}, {"role": "assistant", "content": response.data.choices[0].message.content.trim()}];
 
-    while(conversation.length > 4096) {
-        conversation.splice(0,1);
-    }
 }
