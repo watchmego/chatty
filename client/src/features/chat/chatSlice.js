@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const messageState = {
   messageList: [],
 };
@@ -11,9 +10,8 @@ const userState = {
   userList: [],
 };
 const aiState = {
-  aiActive: false
+  aiActive: false,
 };
-
 
 const messagesSlice = createSlice({
   name: "messages",
@@ -28,15 +26,12 @@ const messagesSlice = createSlice({
       );
     },
     clearMessages: (state, action) => {
-      if(action.room != state.messageList[0]?.roomName) {
+      if (action.room != state.messageList[0]?.roomName) {
         state.messageList = [];
       }
-    }
+    },
   },
 });
-
-
-
 
 //currently not used
 const typingSlice = createSlice({
@@ -68,11 +63,12 @@ const aiSlice = createSlice({
   reducers: {
     aiActive: (state, action) => {
       state.aiActive = action.payload;
-    }
-  }
-})
+    },
+  },
+});
 
-export const { addMessage, deleteMessage, clearMessages } = messagesSlice.actions;
+export const { addMessage, deleteMessage, clearMessages } =
+  messagesSlice.actions;
 export const { isTyping } = typingSlice.actions;
 export const { addUser, removeUser } = userSlice.actions;
 export const { aiActive } = aiSlice.actions;
@@ -80,5 +76,3 @@ export const messageReducer = messagesSlice.reducer;
 export const typingReducer = typingSlice.reducer;
 export const userReducer = userSlice.reducer;
 export const aiReducer = aiSlice.reducer;
-
-

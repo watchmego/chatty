@@ -13,10 +13,13 @@ export const MessageBox = ({
   const dispatch = useDispatch();
 
   const handleLeave = () => {
-    dispatch({ type: 'socket/leave', payload: {room, sessionID: sessionStorage.getItem("sessionID")}});
+    dispatch({
+      type: "socket/leave",
+      payload: { room, sessionID: sessionStorage.getItem("sessionID") },
+    });
     navigate("/");
   };
- 
+
   return (
     <>
       <header className="chatHeader">
