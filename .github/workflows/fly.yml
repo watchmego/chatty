@@ -25,3 +25,4 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.CHATTYSERVER }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TEST: "hello"
