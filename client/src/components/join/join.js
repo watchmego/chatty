@@ -41,6 +41,7 @@ export const Join = () => {
         <button className={"button mt-20"} type="submit">
           Join
         </button>
+        <p>Hint: Create a room by entering a unique room name</p>
       </form>
     </div>
   );
