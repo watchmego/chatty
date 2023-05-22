@@ -21,7 +21,7 @@ export const Join = () => {
     <div className="joinMain">
       <form className="joinInnerContainer" onSubmit={handleSubmit}>
         <h1 className="heading">Chatty</h1>
-        <h2>Join or Create Chat</h2>
+        <h2 className="heading">Join or Create Chat</h2>
         <div>
           <input
             className="joinInput mt-20"
