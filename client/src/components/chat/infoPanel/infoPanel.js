@@ -28,9 +28,11 @@ export const InfoPanel = ({ users, aiActive }) => {
           {aiActive ? "Eject AI" : "Invite AI"}
         </button>
       </div>
-      {users.map((user) => {
-        return <p key={user.sessionId}>{user.name}</p>;
-      })}
+        <div className="userList" >
+        {users.map((user) => {
+          return <p key={user.sessionId}>{user.name}</p>;
+        })}
+        </div>
     </div>
   );
 };

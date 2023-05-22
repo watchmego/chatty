@@ -9,8 +9,8 @@
   display: flex;
   border: none;
   border-radius: 0;
-  padding: 2%;
   height: 15vh;
+  min-height: 40px;
   width: 100%;
   font-size: 1.2em;
 }
@@ -23,13 +23,14 @@ select:focus {
 
 .textInput {
   width: 100%;
+  height: 100%;
   resize: none;
   font-size: 16px;
 }
 
 .sendButton {
   width: 150px;
-  background-color: green;
+  background: #2979ff;
   padding: 10px;
   border: none;
   outline: none;

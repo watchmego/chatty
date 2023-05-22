@@ -8,8 +8,9 @@
 
 .userList > * {
   margin-bottom: 10px;
-  color: #607eaa;
+  color: #0d264b;
   font-size: 14px;
+  font-weight: bold;
 }
 
 .onlineUsers > * {
@@ -31,7 +32,7 @@
   width: 150px;
   border: none;
   outline: none;
-  background-color: #d1512d;
+  background: #2979ff;
+  color: white;
   cursor: pointer;
-  color: #eae3d2;
 }

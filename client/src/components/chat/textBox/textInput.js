@@ -29,6 +29,12 @@ export const TextInput = () => {
 
   //text input event handler
   const handleTyping = (input, remove = false) => {
+
+    if(input.key === 'Enter' && !input.shiftKey) {
+      input.preventDefault();
+      handleSend();
+      return;
+    }
     setMessage(input.target.value);
     //detect whether use is messaging AI
     let regexMatch = input.target.value.match(aiRegex);
