@@ -4,9 +4,11 @@ import { io } from "socket.io-client";
 import dotenv from "dotenv";
 dotenv.config();
 
+const port = process.env.PORT || 8000;
+
 let openai;
 let socket;
-let aiActive = false;
+let aiActive = {};
 let aiSessionID;
 
 let conversation = [];
@@ -21,9 +23,8 @@ export const initialiseAI = () => {
 
 //add AI to room and connect to socketIO server
 export const chatAddAI = (room) => {
-  if (!aiActive) {
-    const port = process.env.PORT || 8000;
-    conversation = [];
+  if (!aiActive[room]) {
+    console.log('aiactive status',aiActive);
     socket = io(`http://localhost:${port}`);
     socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
@@ -33,9 +34,9 @@ export const chatAddAI = (room) => {
       aiSessionID = sessionID;
     });
     socket.connect();
-    aiActive = true;
+    aiActive[room] = true;
     return true;
-  }
+  } 
   return false;
 };
 
@@ -43,8 +44,8 @@ export const chatAddAI = (room) => {
 export const chatRemoveAI = (room) => {
   if (aiSessionID) {
     socket.emit("leave", { room, sessionID: aiSessionID });
+    aiActive[room] = false;
   }
-  aiActive = false;
 };
 
 //send message to ChatGPT API, and return response to socketIO server

@@ -103,6 +103,7 @@ io.on("connection", (socket) => {
     }
   });
   socket.on("addRemoveAI", (payload) => {
+    console.log('adding ai');
     const { room, invite } = payload;
     if (invite) {
       const result = chatAddAI(room);
