@@ -1,7 +1,7 @@
 # Stage 1
 FROM node:14 as reactbuild
 
-ENV REACT_APP_SERVER=https://chatty-server.fly.dev:8080
+ENV REACT_APP_SERVER=https://chatty-server.fly.dev
 
 WORKDIR /usr/src/app
 COPY . .
